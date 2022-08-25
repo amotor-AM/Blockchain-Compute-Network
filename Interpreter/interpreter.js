@@ -10,7 +10,8 @@ const EQ = "EQ"
 const AND = "AND"
 const OR = "OR"
 const JUMP = "JUMP" // moves program counter to another location in the code array
-const JUMPI = "JUMPI" // jumps to dextination IF a condition is met
+const JUMPI = "JUMPI" // jumps to destination IF a condition is met
+const EXECUTION_LIMIT = 100000
 
 
 
@@ -19,12 +20,24 @@ class Interpreter {
         this.state = {
             programCounter: 0,
             stack: [],
-            code: []
+            code: [],
+            executionCount: 0
         }
+    }
+    jump() {
+        const destination = this.state.stack.pop()
+        if(destination < 0 || destination > this.state.code.length) {
+            throw new Error(`Destination not valid: ${destination}`)
+        }
+        this.state.programCounter = destination - 1
     }
     runCode(code) {
         this.state.code = code
         while(this.state.programCounter < this.state.code.length) {
+            this.state.executionCount++
+            if(this.state.executionCount > EXECUTION_LIMIT) {
+                throw new Error(`Execution Count Exceeded the Max Allowable Value of ${EXECUTION_LIMIT}.`) // prevents infinite loop crashes
+            }
             const operationCode = this.state.code[this.state.programCounter]
             try {
                 switch(operationCode) {
@@ -32,6 +45,9 @@ class Interpreter {
                         throw new Error("Code completed successfully")
                     case PUSH:
                         this.state.programCounter++
+                        if(this.state.programCounter === this.state.code.length) {
+                            throw new Error("Invalid PUSH")
+                        }
                         const value = this.state.code[this.state.programCounter]
                         this.state.stack.push(value)
                         break
@@ -56,18 +72,20 @@ class Interpreter {
                         if(operationCode === AND) this.state.stack.push(a && b)
                         if(operationCode === OR) this.state.stack.push(a || b)
                         break
-                    default:
-                        break
-                    case JUMP:
                     case JUMPI:
-                        const condition = this.state.stack.pop()
-                        if(operationCode === JUMP) this.state.programCounter = condition - 1
-                        if(operationCode === JUMPI && condition === 1) this.state.programCounter = this.state.stack.pop() - 1
+                    case JUMP:
+                        if(operationCode === JUMP) this.jump()
+                        if(operationCode === JUMPI && this.state.stack.pop() === 1) this.jump()
+                        break
+                    default:
                         break
                 }
                 
             } catch (error) {
-                return this.state.stack[this.state.stack.length - 1]
+                if(error.message === "Code completed successfully") { // only return if STOP condition is met
+                    return this.state.stack[this.state.stack.length - 1]
+                }
+                throw error
             }
             
             this.state.programCounter ++
@@ -80,6 +98,10 @@ class Interpreter {
 // const interpreter = new Interpreter().runCode(codeArray)
 // console.log("result", interpreter)
 
-code = [PUSH, 6, PUSH, 1, JUMPI, PUSH, 0, JUMP, PUSH, "jump successful", STOP]
-result = new Interpreter().runCode(code)
-console.log("result", result)
+code = [PUSH, 0, JUMP, PUSH, 3, STOP]
+try {
+    new Interpreter().runCode(code)
+    console.log("result", result)
+} catch(err) {
+    console.log(err.message)
+}
