@@ -1,6 +1,7 @@
 This project is one that I have been wanting to work on for a while but didn't really know how to start.
 
 I previously built a Blockchain network that sends and recieves transaction data using the same algorithm as Bitcoin
+SEE: https://github.com/amotor-AM/Full-Stack-Cryptocurrency
 While this Blockchain network was neat and allowed me to learn a lot about Eliptic Curve Cryptogorphy and Blockchain Technology,
 it's applications were limited strictly to transactional data.
 
