@@ -1,0 +1,23 @@
+{
+  "name": "decentralized-blockchain-compute-network",
+  "version": "1.0.0",
+  "description": "This project is one that I have been wanting to work on for a while but didn't really know how to start.",
+  "main": "lightning blockchain.js",
+  "scripts": {
+    "test": "jest --watchAll"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/amotor-AM/Blockchain-Comute-Network.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/amotor-AM/Blockchain-Comute-Network/issues"
+  },
+  "homepage": "https://github.com/amotor-AM/Blockchain-Comute-Network#readme",
+  "dependencies": {
+    "jest": "^28.0.1"
+  }
+}
