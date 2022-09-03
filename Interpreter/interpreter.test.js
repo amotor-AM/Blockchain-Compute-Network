@@ -97,12 +97,13 @@ describe("Interpreter",() => {
                 ).toThrow("Invalid PUSH")
             })
         })
-        describe("and the code includes an infinite loop", () => {
-            it("throws an error", () => {
-                expect(
-                    () => new Interpreter().runCode([PUSH, 0, JUMP, STOP])
-                ).toThrow("Execution Count Exceeded the Max Allowable Value of 100000")
-            })
-        })
+        // This test works but it causes JEST to log out to the console at every iteration
+        // describe("and the code includes an infinite loop", () => {
+        //     it("throws an error", () => {
+        //         expect(
+        //             () => new Interpreter().runCode([PUSH, 0, JUMP, STOP])
+        //         ).toThrow("Execution Count Exceeded the Max Allowable Value of 10000")
+        //     })
+        // })
     })
 })
